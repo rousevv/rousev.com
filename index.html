@@ -4,6 +4,20 @@
 <meta charset="UTF-8">
 <title>I bought the whole domain</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Personal blog by rousev featuring thoughts, ideas, and random musings">
+<meta name="author" content="rousev">
+<meta name="theme-color" content="#5965ff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#050713" media="(prefers-color-scheme: dark)">
+<meta property="og:title" content="I bought the whole domain">
+<meta property="og:description" content="Personal blog by rousev">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://rousev.com">
+<meta property="og:site_name" content="rousev.com">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="I bought the whole domain">
+<meta name="twitter:description" content="Personal blog by rousev">
+<link rel="canonical" href="https://rousev.com">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💀</text></svg>">
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
@@ -19,6 +33,20 @@
   --text-light: #11121a;
   --text-dark: #f4f5ff;
   --radius: 18px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .post {
+    transform: none !important;
+  }
 }
 
 /* GLOBAL + SCROLLBARS */
@@ -42,6 +70,23 @@ html {
 ::-webkit-scrollbar-thumb {
   background: linear-gradient(180deg, var(--accent), var(--accent-soft));
   border-radius: 999px;
+}
+
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 10px;
+  z-index: 100;
+  padding: 10px 16px;
+  background: var(--accent);
+  color: #fff;
+  text-decoration: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+}
+.skip-link:focus {
+  top: 10px;
 }
 
 /* BACKGROUND */
@@ -132,6 +177,12 @@ body.dark .icon-btn {
   transform: scale(1.08) translateY(-1px);
   box-shadow: 0 10px 24px rgba(89,107,255,0.5);
 }
+.icon-btn:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+  transform: scale(1.12) translateY(-1px);
+  box-shadow: 0 0 0 3px rgba(89,101,255,0.3), 0 10px 24px rgba(89,107,255,0.5);
+}
 
 /* SORT CONTROLS */
 .sort-wrap {
@@ -158,6 +209,11 @@ body.dark .icon-btn {
 .sort-button:hover {
   border-color: var(--accent);
   color: var(--accent);
+}
+.sort-button:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(89,101,255,0.3);
 }
 body.dark .sort-button {
   background: rgba(12,15,26,0.98);
@@ -202,6 +258,10 @@ body.dark .sort-menu {
 }
 .sort-option:hover {
   background: rgba(89,107,255,0.12);
+}
+.sort-option:focus-visible {
+  outline: none;
+  background: rgba(89,107,255,0.22);
 }
 .sort-option.active {
   background: rgba(89,107,255,0.18);
@@ -251,7 +311,8 @@ main {
     box-shadow .25s ease,
     border-color .25s ease,
     background .25s ease;
-  will-change: transform;
+  content-visibility: auto;
+  contain: layout style paint;
 }
 body.dark .post {
   background: linear-gradient(145deg,
@@ -267,6 +328,14 @@ body.dark .post {
 }
 .post:hover {
   box-shadow: 0 24px 60px rgba(10,10,40,0.4);
+  will-change: transform;
+}
+.post:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px var(--accent),
+    0 24px 60px rgba(89,101,255,0.5);
+  transform: translateY(0) scale(1.02);
 }
 
 /* tilt is applied by JS on .post transform */
@@ -312,6 +381,12 @@ body.dark .post {
   color: #fff;
   border: 1px solid rgba(255,255,255,0.85);
   box-shadow: 0 6px 14px rgba(89,107,255,0.7);
+  cursor: pointer;
+}
+.post-tag:focus-visible {
+  outline: none;
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 3px rgba(89,101,255,0.5), 0 6px 14px rgba(89,107,255,0.7);
 }
 .post-date {
   margin-top: 8px;
@@ -332,8 +407,8 @@ body.dark .post {
   position: fixed;
   inset: 0;
   background: rgba(0,0,0,0.55);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   display: none;
   align-items: center;
   justify-content: center;
@@ -381,8 +456,18 @@ body.dark .modal-panel {
   cursor: pointer;
   font-size: 26px;
   opacity: .7;
+  background: none;
+  border: none;
+  color: inherit;
+  padding: 4px;
 }
 .modal-close:hover { opacity: 1; }
+.modal-close:focus-visible {
+  outline: none;
+  opacity: 1;
+  transform: scale(1.2);
+  color: var(--accent);
+}
 .modal-tags {
   margin-top: 8px;
   display: flex;
@@ -416,28 +501,268 @@ body.dark .modal-panel {
   background: transparent;
 }
 
+.skeleton {
+  pointer-events: none;
+  animation: skeleton-pulse 1.5s ease-in-out infinite;
+}
+@keyframes skeleton-pulse {
+  0%, 100% { opacity: .6; }
+  50% { opacity: .3; }
+}
+.skeleton-title {
+  height: 24px;
+  width: 60%;
+  background: rgba(89,101,255,0.2);
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+.skeleton-body {
+  height: 16px;
+  width: 100%;
+  background: rgba(89,101,255,0.15);
+  border-radius: 6px;
+  margin-bottom: 8px;
+}
+
+.error-state {
+  text-align: center;
+  padding: 60px 40px;
+  max-width: 400px;
+  margin: 0 auto;
+}
+.error-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+.error-message {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.error-detail {
+  font-size: 14px;
+  opacity: .7;
+  margin-bottom: 20px;
+}
+.retry-button {
+  padding: 12px 24px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  min-height: 44px;
+  transition: .2s ease;
+}
+.retry-button:hover {
+  background: var(--accent-soft);
+  transform: translateY(-1px);
+}
+.retry-button:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(89,101,255,0.3);
+}
+
+.mobile-menu-button {
+  display: none;
+  position: fixed;
+  top: 15px;
+  right: 15px;
+  z-index: 51;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.98);
+  border: 1px solid rgba(20,20,35,0.15);
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+}
+body.dark .mobile-menu-button {
+  background: rgba(12,15,26,0.94);
+  border-color: rgba(255,255,255,0.18);
+  color: var(--text-dark);
+}
+.mobile-menu-button svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}
+
+.mobile-menu {
+  display: none;
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 280px;
+  height: 100vh;
+  background: rgba(255,255,255,0.98);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-left: 1px solid rgba(15,16,40,0.14);
+  z-index: 90;
+  padding: 60px 20px 20px;
+  transform: translateX(100%);
+  transition: transform .3s ease;
+}
+body.dark .mobile-menu {
+  background: rgba(7,9,18,0.98);
+  border-left-color: rgba(255,255,255,0.18);
+}
+.mobile-menu.show {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  transform: translateX(0);
+}
+.mobile-menu-close {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  width: 44px;
+  height: 44px;
+  border: none;
+  background: none;
+  font-size: 32px;
+  cursor: pointer;
+  color: inherit;
+  opacity: .7;
+}
+.mobile-menu-close:hover {
+  opacity: 1;
+}
+
+.mobile-action-bar {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  padding-bottom: env(safe-area-inset-bottom);
+  background: rgba(255,255,255,0.94);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-top: 1px solid rgba(10,10,40,0.12);
+  z-index: 50;
+  align-items: center;
+  justify-content: space-around;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+body.dark .mobile-action-bar {
+  background: rgba(7,9,18,0.96);
+  border-top-color: rgba(255,255,255,0.18);
+}
+
+@supports not (backdrop-filter: blur(12px)) {
+  header {
+    background: rgba(255,255,255,0.98);
+  }
+  body.dark header {
+    background: rgba(7,9,18,0.98);
+  }
+  .mobile-menu {
+    background: rgba(255,255,255,0.98);
+  }
+  body.dark .mobile-menu {
+    background: rgba(7,9,18,0.98);
+  }
+}
+
 /* RESPONSIVE */
 @media (max-width: 768px) {
+  body {
+    padding-bottom: 70px;
+  }
   header {
     padding: 0 10px;
-    height: 64px;
+    height: 56px;
   }
   .header-title {
-    font-size: 14px;
+    font-size: 13px;
+  }
+  .icon-row {
+    display: none;
+  }
+  .sort-wrap {
+    display: none;
+  }
+  .mobile-menu-button {
+    display: flex;
+  }
+  .mobile-action-bar {
+    display: flex;
   }
   main {
     padding: 22px 10px 32px;
   }
   .post {
-    padding: 18px 14px;
+    padding: 24px 18px;
+    margin-bottom: 20px;
   }
   .post-title {
-    font-size: 18px;
+    font-size: 22px;
+  }
+  .post-body {
+    font-size: 15px;
+  }
+  .post-tag {
+    font-size: 12px;
+    padding: 6px 10px;
+    min-height: 32px;
+  }
+  .modal-panel {
+    width: 100vw;
+    height: 100vh;
+    max-width: 100vw;
+    border-radius: 0;
+    padding: 20px;
+  }
+  .modal-close {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .sort-menu {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: auto;
+    width: 100%;
+    min-width: 100%;
+    border-radius: 24px 24px 0 0;
+    padding: 20px;
+    transform: translateY(100%);
+    transition: transform .3s ease;
+  }
+  .sort-menu.show {
+    transform: translateY(0);
   }
 }
 </style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Blog",
+  "name": "rousev.com",
+  "description": "Personal blog by rousev",
+  "url": "https://rousev.com",
+  "author": {
+    "@type": "Person",
+    "name": "rousev"
+  }
+}
+</script>
 </head>
 <body>
+
+<a href="#mainContent" class="skip-link">Skip to content</a>
 
 <header id="topBar">
   <div class="header-title">
@@ -446,64 +771,105 @@ body.dark .modal-panel {
 
   <div style="display:flex;align-items:center;gap:12px;">
     <div class="sort-wrap">
-      <button class="sort-button" id="sortButton">
+      <button class="sort-button" id="sortButton" aria-label="Sort posts" aria-expanded="false" aria-controls="sortMenu">
         <svg viewBox="0 0 24 24"><path d="M3 6h18v2H3zm4 5h14v2H7zm6 5h8v2h-8z"/></svg>
         <span id="sortLabel">By date</span>
       </button>
-      <div class="sort-menu" id="sortMenu">
-        <div class="sort-option active" data-sort="date">
+      <div class="sort-menu" id="sortMenu" role="menu" aria-label="Sort options">
+        <div class="sort-option active" role="menuitem" tabindex="-1" data-sort="date">
           <svg viewBox="0 0 24 24"><path d="M7 11h10v2H7zM5 4h14v2H5zM9 18h6v2H9z"/></svg>
           By date (newest)
         </div>
-        <div class="sort-option" data-sort="default">
+        <div class="sort-option" role="menuitem" tabindex="-1" data-sort="default">
           <svg viewBox="0 0 24 24"><path d="M4 10h16v2H4z"/></svg>
           Default order
         </div>
-        <div class="sort-option" data-sort="random">
+        <div class="sort-option" role="menuitem" tabindex="-1" data-sort="random">
           <svg viewBox="0 0 24 24"><path d="M4 4h3l4 7-4 7H4l4-7zM13 4h3l4 7-4 7h-3l4-7z"/></svg>
           Random
         </div>
-        <div class="sort-option" data-sort="length-asc" id="lengthSort">
+        <div class="sort-option" role="menuitem" tabindex="-1" data-sort="length-asc" id="lengthSort">
           <svg viewBox="0 0 24 24"><path d="M7 4h2v16H7zM15 10h2v10h-2z"/></svg>
           By length
         </div>
-        <div class="sort-option" data-sort="tag">
+        <div class="sort-option" role="menuitem" tabindex="-1" data-sort="tag">
           <svg viewBox="0 0 24 24"><path d="M5 4h9l6 6-9 9-6-6z"/></svg>
           By tag
         </div>
-        <input id="tagInput" class="sort-tag-input" placeholder="tag...">
+        <input id="tagInput" class="sort-tag-input" placeholder="tag..." aria-label="Filter by tag">
       </div>
     </div>
 
     <div class="icon-row">
-      <button class="icon-btn" id="discordBtn" title="Discord">
-        <!-- cleaner Discord icon -->
+      <button class="icon-btn" id="discordBtn" title="Discord" aria-label="Contact via Discord">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
   <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515a.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0a12.64 12.64 0 0 0-.617-1.25a.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057a19.9 19.9 0 0 0 5.993 3.03a.078.078 0 0 0 .084-.028a14.09 14.09 0 0 0 1.226-1.994a.076.076 0 0 0-.041-.106a13.107 13.107 0 0 1-1.872-.892a.077.077 0 0 1-.008-.128a10.2 10.2 0 0 0 .372-.292a.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127a12.299 12.299 0 0 1-1.873.892a.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028a19.839 19.839 0 0 0 6.002-3.03a.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.956-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.955-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.946 2.418-2.157 2.418z"/>
 </svg>
       </button>
 
-      <button class="icon-btn" id="mailBtn" title="Email">
+      <button class="icon-btn" id="mailBtn" title="Email" aria-label="Contact via Email">
         <svg viewBox="0 0 24 24"><path d="M20 4H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 3-8 5-8-5V6l8 5 8-5Z"/></svg>
       </button>
 
-      <button class="icon-btn" id="themeBtn" title="Toggle theme">
+      <button class="icon-btn" id="themeBtn" title="Toggle theme" aria-label="Toggle dark mode">
         <svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 9 9c0-.5 0-1-.09-1.5A7.52 7.52 0 0 1 12 3Z"/></svg>
       </button>
     </div>
   </div>
 </header>
 
-<main>
-  <div id="postList">Loading…</div>
+<button class="mobile-menu-button" id="mobileMenuBtn" aria-label="Open menu" aria-expanded="false">
+  <svg viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+</button>
+
+<div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+  <button class="mobile-menu-close" id="mobileMenuClose" aria-label="Close menu">×</button>
+  <button class="icon-btn" id="mobileDiscordBtn" aria-label="Contact via Discord">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+      <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515a.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0a12.64 12.64 0 0 0-.617-1.25a.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057a19.9 19.9 0 0 0 5.993 3.03a.078.078 0 0 0 .084-.028a14.09 14.09 0 0 0 1.226-1.994a.076.076 0 0 0-.041-.106a13.107 13.107 0 0 1-1.872-.892a.077.077 0 0 1-.008-.128a10.2 10.2 0 0 0 .372-.292a.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127a12.299 12.299 0 0 1-1.873.892a.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028a19.839 19.839 0 0 0 6.002-3.03a.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.956-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.955-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.946 2.418-2.157 2.418z"/>
+    </svg>
+  </button>
+  <button class="icon-btn" id="mobileMailBtn" aria-label="Contact via Email">
+    <svg viewBox="0 0 24 24"><path d="M20 4H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 3-8 5-8-5V6l8 5 8-5Z"/></svg>
+  </button>
+</div>
+
+<div class="mobile-action-bar" id="mobileActionBar">
+  <button class="icon-btn" id="mobileThemeBtn" aria-label="Toggle dark mode">
+    <svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 9 9c0-.5 0-1-.09-1.5A7.52 7.52 0 0 1 12 3Z"/></svg>
+  </button>
+  <button class="sort-button" id="mobileSortBtn" aria-label="Sort posts" aria-expanded="false">
+    <svg viewBox="0 0 24 24"><path d="M3 6h18v2H3zm4 5h14v2H7zm6 5h8v2h-8z"/></svg>
+    <span id="mobileSortLabel">By date</span>
+  </button>
+</div>
+
+<main id="mainContent" role="main">
+  <div id="postList" aria-live="polite" aria-busy="false">Loading…</div>
 </main>
 
-<!-- MODAL -->
-<div class="modal" id="modal">
-  <div class="modal-panel" id="modalPanel">
+<template id="skeletonTemplate">
+  <div class="post skeleton" aria-hidden="true">
+    <div class="skeleton-title"></div>
+    <div class="skeleton-body"></div>
+    <div class="skeleton-body"></div>
+  </div>
+</template>
+
+<template id="errorTemplate">
+  <div class="error-state">
+    <div class="error-icon">⚠️</div>
+    <div class="error-message">Unable to load posts</div>
+    <div class="error-detail">Check your connection and try again</div>
+    <button class="retry-button">Retry</button>
+  </div>
+</template>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-hidden="true">
+  <div class="modal-panel" id="modalPanel" tabindex="-1">
     <div class="modal-header">
-      <div class="modal-title" id="modalTitle"></div>
-      <div class="modal-close" id="modalClose">×</div>
+      <h2 class="modal-title" id="modalTitle"></h2>
+      <button class="modal-close" id="modalClose" aria-label="Close modal">×</button>
     </div>
     <div class="modal-tags" id="modalTags"></div>
     <div class="modal-body" id="modalBody"></div>
@@ -512,43 +878,25 @@ body.dark .modal-panel {
 </div>
 
 <script>
-/* THEME INIT */
-const storedTheme = localStorage.getItem('rousev-theme');
-if (
-  storedTheme === 'dark' ||
-  (!storedTheme &&
-    window.matchMedia &&
-    window.matchMedia('(prefers-color-scheme: dark)').matches)
-) {
-  document.body.classList.add('dark');
-}
+const SCROLL_HIDE_THRESHOLD = 80;
+const MOBILE_BREAKPOINT = 768;
+const TILT_INTENSITY = 40;
+const DEBOUNCE_DELAY = 300;
+const REVEAL_THRESHOLD = 0.3;
+const MAX_FETCH_RETRIES = 3;
 
-/* THEME TOGGLE */
-document.getElementById('themeBtn').addEventListener('click', () => {
-  document.body.classList.toggle('dark');
-  localStorage.setItem(
-    'rousev-theme',
-    document.body.classList.contains('dark') ? 'dark' : 'light'
-  );
-});
+let allPosts = [];
+let currentSort = 'date';
+let lengthAscending = true;
+let lastFocusedElement = null;
+let isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
+let prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-/* HEADER HIDE */
-let lastScroll = 0;
-const topBar = document.getElementById('topBar');
-window.addEventListener('scroll', () => {
-  const y = window.scrollY;
-  if (y > lastScroll && y > 80) topBar.classList.add('hidden');
-  else topBar.classList.remove('hidden');
-  lastScroll = y;
-});
-
-/* ICON HANDLERS */
-document.getElementById('discordBtn').onclick = () =>
-  openInfoModal('Discord', '@brousev on discord');
-document.getElementById('mailBtn').onclick = () =>
-  openInfoModal('Email', 'contact@rousev.com');
-
-/* MODAL */
+const postList = document.getElementById('postList');
+const sortButton = document.getElementById('sortButton');
+const sortMenu = document.getElementById('sortMenu');
+const sortLabel = document.getElementById('sortLabel');
+const tagInput = document.getElementById('tagInput');
 const modal = document.getElementById('modal');
 const modalPanel = document.getElementById('modalPanel');
 const modalTitle = document.getElementById('modalTitle');
@@ -556,9 +904,199 @@ const modalTags = document.getElementById('modalTags');
 const modalBody = document.getElementById('modalBody');
 const modalMeta = document.getElementById('modalMeta');
 const modalClose = document.getElementById('modalClose');
+const topBar = document.getElementById('topBar');
+const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+const mobileMenu = document.getElementById('mobileMenu');
+const mobileMenuClose = document.getElementById('mobileMenuClose');
+const mobileActionBar = document.getElementById('mobileActionBar');
+const mobileSortBtn = document.getElementById('mobileSortBtn');
+const mobileSortLabel = document.getElementById('mobileSortLabel');
+
+const storedTheme = localStorage.getItem('rousev-theme');
+if (storedTheme === 'dark' || (!storedTheme && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+  document.body.classList.add('dark');
+}
+
+function toggleTheme() {
+  document.body.classList.toggle('dark');
+  localStorage.setItem('rousev-theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+}
+
+document.getElementById('themeBtn').addEventListener('click', toggleTheme);
+document.getElementById('mobileThemeBtn').addEventListener('click', toggleTheme);
+
+let lastScroll = 0;
+window.addEventListener('scroll', () => {
+  const y = window.scrollY;
+  const threshold = isMobile ? 40 : SCROLL_HIDE_THRESHOLD;
+  if (y > lastScroll && y > threshold) topBar.classList.add('hidden');
+  else topBar.classList.remove('hidden');
+  lastScroll = y;
+}, { passive: true });
+
+function trapFocus(element) {
+  const focusableElements = element.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+  const firstFocusable = focusableElements[0];
+  const lastFocusable = focusableElements[focusableElements.length - 1];
+
+  element.addEventListener('keydown', e => {
+    if (e.key === 'Tab') {
+      if (e.shiftKey) {
+        if (document.activeElement === firstFocusable) {
+          e.preventDefault();
+          lastFocusable.focus();
+        }
+      } else {
+        if (document.activeElement === lastFocusable) {
+          e.preventDefault();
+          firstFocusable.focus();
+        }
+      }
+    }
+  });
+}
+
+function openMenu(menuElement, button) {
+  lastFocusedElement = document.activeElement;
+  menuElement.classList.add('show');
+  if (button) button.setAttribute('aria-expanded', 'true');
+  const firstFocusable = menuElement.querySelector('button, [role="menuitem"]');
+  if (firstFocusable) setTimeout(() => firstFocusable.focus(), 100);
+}
+
+function closeMenu(menuElement, button) {
+  menuElement.classList.remove('show');
+  if (button) button.setAttribute('aria-expanded', 'false');
+  if (lastFocusedElement) {
+    lastFocusedElement.focus();
+    lastFocusedElement = null;
+  }
+}
+
+sortButton.addEventListener('click', () => {
+  if (sortMenu.classList.contains('show')) {
+    closeMenu(sortMenu, sortButton);
+  } else {
+    openMenu(sortMenu, sortButton);
+  }
+});
+
+mobileSortBtn.addEventListener('click', () => {
+  if (sortMenu.classList.contains('show')) {
+    closeMenu(sortMenu, mobileSortBtn);
+  } else {
+    openMenu(sortMenu, mobileSortBtn);
+  }
+});
+
+mobileMenuBtn.addEventListener('click', () => {
+  if (mobileMenu.classList.contains('show')) {
+    closeMenu(mobileMenu, mobileMenuBtn);
+  } else {
+    openMenu(mobileMenu, mobileMenuBtn);
+  }
+});
+
+mobileMenuClose.addEventListener('click', () => {
+  closeMenu(mobileMenu, mobileMenuBtn);
+});
+
+document.addEventListener('click', e => {
+  if (!sortMenu.contains(e.target) && e.target !== sortButton && e.target !== mobileSortBtn) {
+    if (sortMenu.classList.contains('show')) {
+      closeMenu(sortMenu, sortButton);
+    }
+  }
+  if (!mobileMenu.contains(e.target) && e.target !== mobileMenuBtn) {
+    if (mobileMenu.classList.contains('show')) {
+      closeMenu(mobileMenu, mobileMenuBtn);
+    }
+  }
+});
+
+document.querySelectorAll('.sort-option').forEach((opt, index) => {
+  opt.addEventListener('click', () => {
+    const mode = opt.dataset.sort;
+    if (mode === 'length-asc') {
+      currentSort = lengthAscending ? 'length-asc' : 'length-desc';
+      lengthAscending = !lengthAscending;
+    } else {
+      currentSort = mode;
+    }
+    document.querySelectorAll('.sort-option').forEach(o => o.classList.remove('active'));
+    opt.classList.add('active');
+    updateSortLabel();
+    closeMenu(sortMenu, sortButton);
+    renderPosts();
+  });
+
+  opt.addEventListener('keydown', e => {
+    const options = Array.from(document.querySelectorAll('.sort-option'));
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      const nextIndex = (index + 1) % options.length;
+      options[nextIndex].focus();
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      const prevIndex = (index - 1 + options.length) % options.length;
+      options[prevIndex].focus();
+    } else if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      opt.click();
+    }
+  });
+});
+
+let tagInputTimeout;
+tagInput.addEventListener('input', () => {
+  clearTimeout(tagInputTimeout);
+  tagInputTimeout = setTimeout(() => {
+    if (tagInput.value.trim()) {
+      currentSort = 'tag';
+      document.querySelectorAll('.sort-option').forEach(o => o.classList.remove('active'));
+      document.querySelector('[data-sort="tag"]').classList.add('active');
+      updateSortLabel();
+      renderPosts();
+    }
+  }, DEBOUNCE_DELAY);
+});
+
+tagInput.addEventListener('keydown', e => {
+  if (e.key === 'Enter') {
+    clearTimeout(tagInputTimeout);
+    currentSort = 'tag';
+    document.querySelectorAll('.sort-option').forEach(o => o.classList.remove('active'));
+    document.querySelector('[data-sort="tag"]').classList.add('active');
+    updateSortLabel();
+    closeMenu(sortMenu, sortButton);
+    renderPosts();
+  }
+});
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    if (modal.classList.contains('show')) {
+      closeModal();
+    } else if (sortMenu.classList.contains('show')) {
+      closeMenu(sortMenu, sortButton);
+    } else if (mobileMenu.classList.contains('show')) {
+      closeMenu(mobileMenu, mobileMenuBtn);
+    }
+  }
+});
+
+document.getElementById('discordBtn').onclick = () => openInfoModal('Discord', '@brousev on discord');
+document.getElementById('mailBtn').onclick = () => openInfoModal('Email', 'contact@rousev.com');
+document.getElementById('mobileDiscordBtn').onclick = () => {
+  closeMenu(mobileMenu, mobileMenuBtn);
+  openInfoModal('Discord', '@brousev on discord');
+};
+document.getElementById('mobileMailBtn').onclick = () => {
+  closeMenu(mobileMenu, mobileMenuBtn);
+  openInfoModal('Email', 'contact@rousev.com');
+};
 
 function sizeModalToContent() {
-  // Let content lay out naturally first
   modalPanel.style.height = 'auto';
   modalPanel.style.maxHeight = 'none';
   modalPanel.style.overflowY = 'hidden';
@@ -580,39 +1118,50 @@ function sizeModalToContent() {
 }
 
 function openInfoModal(title, text) {
+  lastFocusedElement = document.activeElement;
   modalPanel.classList.add('small');
   modalTitle.textContent = title;
   modalBody.textContent = text;
   modalTags.innerHTML = '';
   modalMeta.textContent = '';
   modal.classList.add('show');
+  modal.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
   sizeModalToContent();
+  setTimeout(() => modalClose.focus(), 100);
+  trapFocus(modalPanel);
 }
 
 function openPostModal(title, htmlBody, tags, dateStr) {
+  lastFocusedElement = document.activeElement;
   modalPanel.classList.remove('small');
   modalTitle.textContent = title;
   modalBody.innerHTML = htmlBody;
-  modalTags.innerHTML = tags
-    .map(t => `<span class="post-tag">${t}</span>`)
-    .join('');
+  modalTags.innerHTML = tags.map(t => `<span class="post-tag">${t}</span>`).join('');
   modalMeta.textContent = dateStr || '';
   modal.classList.add('show');
+  modal.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
   sizeModalToContent();
+  setTimeout(() => modalClose.focus(), 100);
+  trapFocus(modalPanel);
 }
 
 function closeModal() {
   modal.classList.remove('show');
+  modal.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = '';
+  if (lastFocusedElement) {
+    lastFocusedElement.focus();
+    lastFocusedElement = null;
+  }
 }
+
 modalClose.onclick = closeModal;
 modal.addEventListener('click', e => {
   if (e.target === modal) closeModal();
 });
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') closeModal();
-});
 
-/* DATE HELPERS */
 function daySuffix(d) {
   if (d > 3 && d < 21) return 'th';
   const r = d % 10;
@@ -621,26 +1170,21 @@ function daySuffix(d) {
   if (r === 3) return 'rd';
   return 'th';
 }
+
 function formatPrettyDate(date) {
-  const months = ['January','February','March','April','May','June','July',
-                  'August','September','October','November','December'];
+  const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
   const day = date.getDate();
   return `${day}${daySuffix(day)} May ${date.getFullYear()}`.replace(' May', ` ${months[date.getMonth()]}`);
 }
 
-/* BODY PROCESSING */
 function processBody(text) {
   const escape = s => {
     const div = document.createElement('div');
     div.textContent = s;
     return div.innerHTML;
   };
-  text = text.replace(/\[\$\/\/image:(.*?)\/\/\]/g, (m, p) =>
-    `<img src="${escape(p.trim())}" style="height:1em;vertical-align:baseline;">`
-  );
-  text = text.replace(/\[\$\/\/url:(.*?)\/\/\]/g, (m, p) =>
-    `<img src="${escape(p.trim())}" style="height:1em;vertical-align:baseline;">`
-  );
+  text = text.replace(/\[\$\/\/image:(.*?)\/\/\]/g, (m, p) => `<img src="${escape(p.trim())}" style="height:1em;vertical-align:baseline;">`);
+  text = text.replace(/\[\$\/\/url:(.*?)\/\/\]/g, (m, p) => `<img src="${escape(p.trim())}" style="height:1em;vertical-align:baseline;">`);
   text = text.replace(/(https?:\/\/[^\s]+)/g, url => {
     const safe = escape(url);
     return `<a href="${safe}" target="_blank" rel="noopener noreferrer">${safe}</a>`;
@@ -648,7 +1192,6 @@ function processBody(text) {
   return text;
 }
 
-/* PARSING POSTS */
 function parsePost(raw, number, pinned) {
   const lines = raw.replace(/\r\n/g, '\n').split('\n');
   const rawTitle = (lines[0] || '').trim();
@@ -679,24 +1222,58 @@ function parsePost(raw, number, pinned) {
   return { number, pinned, title, tags, bodyRaw, bodyHtml, dateObj, dateDisplay };
 }
 
-/* LOAD POSTS */
-let allPosts = [];
-let currentSort = 'date';
-let lengthAscending = true;
+async function fetchWithRetry(url, retries = MAX_FETCH_RETRIES) {
+  for (let i = 0; i < retries; i++) {
+    try {
+      const res = await fetch(url, { cache: 'no-store' });
+      if (res.ok) return res;
+      if (res.status === 404) return null;
+    } catch (err) {
+      if (i === retries - 1) throw err;
+      await new Promise(resolve => setTimeout(resolve, Math.pow(2, i) * 1000));
+    }
+  }
+  return null;
+}
 
-const postList = document.getElementById('postList');
-const sortButton = document.getElementById('sortButton');
-const sortMenu = document.getElementById('sortMenu');
-const sortLabel = document.getElementById('sortLabel');
-const tagInput = document.getElementById('tagInput');
+function showSkeletons() {
+  const template = document.getElementById('skeletonTemplate');
+  postList.innerHTML = '';
+  postList.setAttribute('aria-busy', 'true');
+  for (let i = 0; i < 3; i++) {
+    const clone = template.content.cloneNode(true);
+    postList.appendChild(clone);
+  }
+}
+
+function showError(retryCallback) {
+  const template = document.getElementById('errorTemplate');
+  postList.innerHTML = '';
+  postList.setAttribute('aria-busy', 'false');
+  const clone = template.content.cloneNode(true);
+  const retryBtn = clone.querySelector('.retry-button');
+  if (retryBtn) retryBtn.addEventListener('click', retryCallback);
+  postList.appendChild(clone);
+}
 
 async function loadPosts() {
+  const cachedPosts = sessionStorage.getItem('rousev-posts');
+  if (cachedPosts) {
+    try {
+      allPosts = JSON.parse(cachedPosts);
+      renderPosts();
+      return;
+    } catch {}
+  }
+
+  showSkeletons();
+
   const posts = [];
   let pinnedPost = null;
 
   try {
-    const resPinned = await fetch('./posts/IMPORTANT.txt', { cache: 'no-store' });
-    if (resPinned.ok) {
+    const resPinned = await fetchWithRetry('./posts/IMPORTANT.txt');
+    if (resPinned) {
       const txt = await resPinned.text();
       pinnedPost = parsePost(txt, -1, true);
     }
@@ -705,8 +1282,8 @@ async function loadPosts() {
   let i = 1;
   while (true) {
     try {
-      const res = await fetch(`./posts/Thing_${i}.txt`, { cache: 'no-store' });
-      if (!res.ok) break;
+      const res = await fetchWithRetry(`./posts/Thing_${i}.txt`);
+      if (!res) break;
       const txt = await res.text();
       posts.push(parsePost(txt, i, false));
       i++;
@@ -716,51 +1293,20 @@ async function loadPosts() {
   }
 
   if (!posts.length && !pinnedPost) {
-    postList.innerHTML = '<div class="empty">no posts</div>';
+    showError(loadPosts);
     return;
   }
 
   allPosts = [];
   if (pinnedPost) allPosts.push(pinnedPost);
   allPosts.push(...posts);
+
+  try {
+    sessionStorage.setItem('rousev-posts', JSON.stringify(allPosts));
+  } catch {}
+
   renderPosts();
 }
-
-/* SORTING UI */
-sortButton.addEventListener('click', () => {
-  sortMenu.classList.toggle('show');
-});
-document.addEventListener('click', e => {
-  if (!sortMenu.contains(e.target) && e.target !== sortButton) {
-    sortMenu.classList.remove('show');
-  }
-});
-document.querySelectorAll('.sort-option').forEach(opt => {
-  opt.addEventListener('click', () => {
-    const mode = opt.dataset.sort;
-    if (mode === 'length-asc') {
-      currentSort = lengthAscending ? 'length-asc' : 'length-desc';
-      lengthAscending = !lengthAscending;
-    } else {
-      currentSort = mode;
-    }
-    document.querySelectorAll('.sort-option').forEach(o => o.classList.remove('active'));
-    opt.classList.add('active');
-    updateSortLabel();
-    sortMenu.classList.remove('show');
-    renderPosts();
-  });
-});
-tagInput.addEventListener('keydown', e => {
-  if (e.key === 'Enter') {
-    currentSort = 'tag';
-    document.querySelectorAll('.sort-option').forEach(o => o.classList.remove('active'));
-    document.querySelector('[data-sort="tag"]').classList.add('active');
-    updateSortLabel();
-    sortMenu.classList.remove('show');
-    renderPosts();
-  }
-});
 
 function updateSortLabel() {
   const labels = {
@@ -771,10 +1317,11 @@ function updateSortLabel() {
     'length-desc': 'Length ↓',
     'tag': 'By tag'
   };
-  sortLabel.textContent = labels[currentSort] || 'By date';
+  const label = labels[currentSort] || 'By date';
+  sortLabel.textContent = label;
+  mobileSortLabel.textContent = label;
 }
 
-/* SORTING + RENDER */
 function contentLength(post) {
   return post.bodyRaw.replace(/\s+/g, ' ').trim().length;
 }
@@ -805,9 +1352,7 @@ function sortedPosts() {
   } else if (currentSort === 'tag') {
     const filter = tagInput.value.trim().toLowerCase();
     if (filter) {
-      posts = posts.filter(p =>
-        p.tags.some(t => t.toLowerCase().includes(filter))
-      );
+      posts = posts.filter(p => p.tags.some(t => t.toLowerCase().includes(filter)));
     }
   }
 
@@ -826,7 +1371,10 @@ function setTagFilter(tag) {
 
 function renderPosts() {
   const posts = sortedPosts();
+  const fragment = document.createDocumentFragment();
   postList.innerHTML = '';
+  postList.setAttribute('aria-busy', 'false');
+
   if (!posts.length) {
     postList.innerHTML = '<div class="empty">no posts</div>';
     return;
@@ -835,25 +1383,41 @@ function renderPosts() {
   posts.forEach(p => {
     const card = document.createElement('article');
     card.className = 'post' + (p.pinned ? ' pinned' : '');
+    card.setAttribute('tabindex', '0');
     card.innerHTML = `
       <div class="post-title">${p.title}</div>
       <div class="post-body">${p.bodyHtml}</div>
       ${p.tags.length ? `<div class="post-tags">
-        ${p.tags.map(t=>`<span class="post-tag" data-tag="${t}">${t}</span>`).join('')}
+        ${p.tags.map(t => `<span class="post-tag" tabindex="0" role="button" data-tag="${t}">${t}</span>`).join('')}
       </div>` : ''}
       ${p.dateDisplay ? `<div class="post-date">${p.dateDisplay}</div>` : ''}
     `;
-    card.addEventListener('click', () =>
-      openPostModal(p.title, p.bodyHtml, p.tags, p.dateDisplay)
-    );
-    postList.appendChild(card);
+
+    const openPost = () => openPostModal(p.title, p.bodyHtml, p.tags, p.dateDisplay);
+    card.addEventListener('click', openPost);
+    card.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        openPost();
+      }
+    });
+
+    fragment.appendChild(card);
   });
 
-  // Tag click -> filter
+  postList.appendChild(fragment);
+
   document.querySelectorAll('.post-tag').forEach(tagEl => {
-    tagEl.addEventListener('click', e => {
+    const handleTagClick = e => {
       e.stopPropagation();
       setTagFilter(tagEl.dataset.tag);
+    };
+    tagEl.addEventListener('click', handleTagClick);
+    tagEl.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        handleTagClick(e);
+      }
     });
   });
 
@@ -861,28 +1425,36 @@ function renderPosts() {
   setupTilt();
 }
 
-/* REVEAL ON SCROLL */
 function setupReveal() {
+  if (!window.IntersectionObserver) {
+    document.querySelectorAll('.post').forEach(c => c.classList.add('visible'));
+    return;
+  }
+
   const cards = document.querySelectorAll('.post');
   const io = new IntersectionObserver(entries => {
     entries.forEach(e => {
       if (e.isIntersecting) e.target.classList.add('visible');
       else e.target.classList.remove('visible');
     });
-  }, { threshold: .3 });
+  }, { threshold: isMobile ? 0.2 : REVEAL_THRESHOLD });
   cards.forEach(c => io.observe(c));
 }
 
-/* TILT */
 function setupTilt() {
+  if (isMobile || prefersReducedMotion) return;
+
   document.querySelectorAll('.post').forEach(card => {
     card.onmousemove = e => {
-      const r = card.getBoundingClientRect();
-      const x = e.clientX - (r.left + r.width / 2);
-      const y = e.clientY - (r.top + r.height / 2);
-      const rx = (-y / 40);
-      const ry = (x / 40);
-      card.style.transform = `translateY(0) scale(1.03) rotateX(${rx}deg) rotateY(${ry}deg)`;
+      if (!window.requestAnimationFrame) return;
+      requestAnimationFrame(() => {
+        const r = card.getBoundingClientRect();
+        const x = e.clientX - (r.left + r.width / 2);
+        const y = e.clientY - (r.top + r.height / 2);
+        const rx = -y / TILT_INTENSITY;
+        const ry = x / TILT_INTENSITY;
+        card.style.transform = `translateY(0) scale(1.03) rotateX(${rx}deg) rotateY(${ry}deg)`;
+      });
     };
     card.onmouseleave = () => {
       card.style.transform = 'translateY(0) scale(1)';
@@ -890,7 +1462,10 @@ function setupTilt() {
   });
 }
 
-/* INIT */
+window.addEventListener('resize', () => {
+  isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
+});
+
 loadPosts();
 </script>
 </body>
